@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🏠 Real Estate Price Predictor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4f8;
+      color: #333;
+      padding: 2em;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 1.5em;
+    }
+
+    .error, .prediction {
+      text-align: center;
+      font-weight: 600;
+      padding: 1em;
+      border-radius: 8px;
+      margin-bottom: 1em;
+    }
+
+    .error {
+      background: #ffe6e6;
+      color: #d8000c;
+    }
+
+    .prediction {
+      background: #e6f9e6;
+      color: #006400;
+    }
+
+    form {
+      background: white;
+      border-radius: 12px;
+      padding: 2em;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .section {
+      margin-bottom: 2em;
+    }
+
+    .section h2 {
+      margin-bottom: 1em;
+      font-size: 1.1em;
+      color: #1a202c;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.25em;
+      font-weight: 500;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 0.5em;
+      margin-bottom: 1em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+
+    .radio-group, .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      margin-bottom: 1em;
+    }
+
+    .radio-group label,
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+      background: #f1f5f9;
+      padding: 0.5em 1em;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .radio-group input[type="radio"],
+    .checkbox-group input[type="checkbox"] {
+      accent-color: #4f46e5;
+    }
+
+    .radio-group label:hover,
+    .checkbox-group label:hover {
+      background: #e0e7ff;
+    }
+
+    button {
+      background: #4f46e5;
+      color: white;
+      padding: 0.8em 1.5em;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      display: block;
+      margin: auto;
+    }
+
+    button:hover {
+      background: #4338ca;
+    }
+  </style>
+</head>
+<body>
+  <h1>🏠 Real Estate Price Predictor</h1>
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  {% if prediction %}
+    <p class="prediction">{{ prediction }}</p>
+  {% endif %}
+
+  <form method="POST">
+    <div class="section">
+      <h2>📍 Property Details</h2>
+
+      <label for="city">Select City:</label>
+      <select name="city" required>
+        <option value="">-- Choose a city --</option>
+        {% for city in cities %}
+          <option value="{{ city }}" {% if selected_city == city %}selected{% endif %}>{{ city|title }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="carpet_area">Carpet Area (sqft):</label>
+      <input type="number" name="carpet_area" step="0.1" value="{{ carpet_area }}" required />
+
+      <label for="bhk">BHK (Bedrooms):</label>
+      <input type="number" name="bhk" value="{{ bhk }}" required />
+
+      <label for="floor_ratio">Floor Ratio:</label>
+      <input type="number" name="floor_ratio" step="0.01" value="{{ floor_ratio }}" required />
+    </div>
+
+    <div class="section">
+      <h2>🛁 Features</h2>
+
+      <label for="bathroom">Bathroom:</label>
+      <input type="number" name="bathroom" value="{{ bathroom }}" required />
+
+      <label for="balcony">Balcony:</label>
+      <input type="number" name="balcony" value="{{ balcony }}" required />
+
+      <label>Car Parking:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="car_parking" value="0" {% if car_parking == 0 %}checked{% endif %} /> Open</label>
+        <label><input type="radio" name="car_parking" value="1" {% if car_parking == 1 %}checked{% endif %} /> Closed</label>
+      </div>
+
+      <label for="furnishing">Furnishing:</label>
+      <select name="furnishing">
+        <option value="Unfurnished" {% if furnishing == "Unfurnished" %}selected{% endif %}>Unfurnished</option>
+        <option value="Semi-Furnished" {% if furnishing == "Semi-Furnished" %}selected{% endif %}>Semi-Furnished</option>
+        <option value="Furnished" {% if furnishing == "Furnished" %}selected{% endif %}>Furnished</option>
+      </select>
+
+      <label>Facing Direction:</label>
+      <div class="radio-group">
+        {% set directions = {
+          0: "North (0°)", 45: "North-East (45°)", 90: "East (90°)",
+          135: "South-East (135°)", 180: "South (180°)", 225: "South-West (225°)",
+          270: "West (270°)", 315: "North-West (315°)"
+        } %}
+        {% for degree, label in directions.items() %}
+          <label>
+            <input type="radio" name="facing" value="{{ degree }}" {% if facing == degree %}checked{% endif %} />
+            {{ label }}
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📑 Ownership & Deal Type</h2>
+
+      <label for="ownership">Ownership:</label>
+      <select name="ownership">
+        <option value="0" {% if ownership == 0 %}selected{% endif %}>Owner</option>
+        <option value="1" {% if ownership == 1 %}selected{% endif %}>Builder</option>
+        <option value="2" {% if ownership == 2 %}selected{% endif %}>Agent</option>
+      </select>
+
+      <label for="transaction">Transaction Type:</label>
+      <select name="transaction">
+        <option value="0" {% if transaction == 0 %}selected{% endif %}>New</option>
+        <option value="1" {% if transaction == 1 %}selected{% endif %}>Resale</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <h2>🏞️ Amenities</h2>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="garden_park" value="1" {% if garden_park %}checked{% endif %} /> Garden / Park</label>
+        <label><input type="checkbox" name="main_road" value="1" {% if main_road %}checked{% endif %} /> Main Road</label>
+        <label><input type="checkbox" name="pool" value="1" {% if pool %}checked{% endif %} /> Swimming Pool</label>
+        <label><input type="checkbox" name="not_available" value="1" {% if not_available %}checked{% endif %} /> Not Available</label>
+      </div>
+    </div>
+
+    <button type="submit">🔍 Predict Price</button>
+  </form>
+</body>
+</html>

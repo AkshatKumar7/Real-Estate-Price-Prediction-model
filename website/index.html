@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🏠 House Price Predictor</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="bg-dark text-light">
+  <div class="container py-5">
+    <div class="text-center mb-4">
+      <h1 class="fw-bold"><i class="bi bi-house-fill"></i> House Price Predictor</h1>
+      <p class="text-muted">Enter your property details below</p>
+    </div>
+
+    <div class="card bg-secondary border-0 shadow-lg">
+      <div class="card-body">
+        <form method="POST">
+          <div class="row g-3">
+            <!-- City -->
+            <div class="col-md-4">
+              <label class="form-label">City</label>
+              <select name="selected_city" class="form-select" required>
+                <option value="">Select city…</option>
+                {% for city in cities %}
+                  <option value="{{ city }}" {% if city==selected_city %}selected{% endif %}>{{ city.title() }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Floor Ratio -->
+            <div class="col-md-4">
+              <label class="form-label">Floor (Ratio)</label>
+              <input type="number" step="0.01" name="floor_ratio" class="form-control" value="{{ floor_ratio }}">
+            </div>
+
+            <!-- Bathroom -->
+            <div class="col-md-4">
+              <label class="form-label">Bathrooms</label>
+              <input type="number" name="bathroom" class="form-control" value="{{ bathroom }}">
+            </div>
+
+            <!-- Balcony -->
+            <div class="col-md-4">
+              <label class="form-label">Balconies</label>
+              <input type="number" name="balcony" class="form-control" value="{{ balcony }}">
+            </div>
+
+            <!-- BHK -->
+            <div class="col-md-4">
+              <label class="form-label">BHK</label>
+              <input type="number" name="bhk" class="form-control" value="{{ bhk }}">
+            </div>
+
+            <!-- Carpet Area -->
+            <div class="col-md-4">
+              <label class="form-label">Carpet Area (sqft)</label>
+              <input type="number" step="0.1" name="carpet_area" class="form-control" value="{{ carpet_area }}">
+            </div>
+
+            <!-- Furnishing -->
+            <div class="col-md-4">
+              <label class="form-label">Furnishing</label>
+              <select name="furnishing" class="form-select">
+                {% for opt in ['Unfurnished','Semi-Furnished','Furnished'] %}
+                  <option value="{{ opt }}" {% if opt==furnishing %}selected{% endif %}>{{ opt }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Facing -->
+            <div class="col-md-4">
+              <label class="form-label">Facing</label>
+              <select name="facing" class="form-select">
+                {% for d in ['North','South','East','West','NE','NW','SE','SW'] %}
+                  <option value="{{ d }}" {% if d==facing %}selected{% endif %}>{{ d }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Ownership -->
+            <div class="col-md-4">
+              <label class="form-label">Ownership</label>
+              <select name="ownership" class="form-select">
+                {% for o in ['Freehold','Co-operative Society','Power of Attorney','Leasehold'] %}
+                  <option value="{{ o }}" {% if o==ownership %}selected{% endif %}>{{ o }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Car Parking -->
+            <div class="col-md-4">
+              <label class="form-label">Car Parking</label>
+              <select name="car_parking" class="form-select">
+                <option value="Open" {% if car_parking=='Open' %}selected{% endif %}>Open</option>
+                <option value="Close" {% if car_parking=='Close' %}selected{% endif %}>Close</option>
+              </select>
+            </div>
+
+            <!-- Transaction -->
+            <div class="col-md-4">
+              <label class="form-label">Transaction</label>
+              <select name="transaction" class="form-select">
+                {% for t in ['Resale','New Property','Other','Rent'] %}
+                  <option value="{{ t }}" {% if t==transaction %}selected{% endif %}>{{ t }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Garden/Park -->
+            <div class="col-md-4">
+              <label class="form-label">Garden / Park</label>
+              <select name="garden_park" class="form-select">
+                <option value="Yes" {% if garden_park=='Yes' %}selected{% endif %}>Yes</option>
+                <option value="No"  {% if garden_park=='No'  %}selected{% endif %}>No</option>
+              </select>
+            </div>
+
+            <!-- Main Road -->
+            <div class="col-md-4">
+              <label class="form-label">Main Road</label>
+              <select name="main_road" class="form-select">
+                <option value="Yes" {% if main_road=='Yes' %}selected{% endif %}>Yes</option>
+                <option value="No"  {% if main_road=='No'  %}selected{% endif %}>No</option>
+              </select>
+            </div>
+
+            <!-- Pool -->
+            <div class="col-md-4">
+              <label class="form-label">Pool</label>
+              <select name="pool" class="form-select">
+                <option value="Yes" {% if pool=='Yes' %}selected{% endif %}>Yes</option>
+                <option value="No"  {% if pool=='No'  %}selected{% endif %}>No</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg px-5">
+              Predict Price
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.js"></script>
+</body>
+</html>

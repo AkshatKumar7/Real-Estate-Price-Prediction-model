@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .message {
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+        .prediction {
+            color: green;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Price Prediction</h1>
+        
+        {% if prediction %}
+            <div class="message prediction">{{ prediction }}</div>
+        {% elif error %}
+            <div class="message error">{{ error }}</div>
+        {% else %}
+            <div class="message">No data submitted.</div>
+        {% endif %}
+        
+        <a class="back-link" href="/">← Back to form</a>
+    </div>
+</body>
+</html>
+
