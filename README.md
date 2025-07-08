@@ -20,11 +20,3 @@ A Flask-based machine learning web application that predicts real estate prices 
 **Machine Learning:** scikit-learn, joblib  
 **Frontend:** HTML5, Water.css  
 **Deployment:** Render
-
-## 📦 Installation (Local Setup)
-
-Clone the Repository:
-
-```bash
-git clone https://github.com/AkshatKumar7/Real-Estate-Price-Prediction-model.git
-cd Real-Estate-Price-Prediction-model
